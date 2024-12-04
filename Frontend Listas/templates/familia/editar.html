@@ -1,0 +1,39 @@
+{% extends "base.html"%}
+{% block content %}
+<div class="psgetitle">
+    <h1>Editar familia</h1>
+</div>
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Edicion de familia</h5>
+                  <form class="row g-3 needs-validation" method="POST" action="/familia/update" novalidate>
+                    <input type="hidden" value="{{familia.id}}" name="id">
+                    <div class="col-md-6">
+                        <label for="validationCustom01" class="form-label">Numero de integrantes</label>
+                        <input type="number" class="form-control" name="nroIntegrantes" value="{{familia.nroIntegrantes}}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="validationCustom02" class="form-label">Nombre de la familia</label>
+                        <input type="text" class="form-control" name="nombreFamilia" value="{{familia.nombreFamilia}}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="validationCustom02" class="form-label">Saldo Familiar</label>
+                        <input type="number" class="form-control" name="saldo" value="{{familia.saldo}}" required>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-success" type="submit">Guardar</button>
+                    </div>
+                    <div class="col-6">
+                        <a href="{{ url_for('familia.home_familia') }}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+                </div>
+              </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

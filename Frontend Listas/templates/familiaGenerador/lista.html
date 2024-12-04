@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Lista de Generadores y Familias Asociados</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert alert-dismissible fade show" role="alert">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <a href="/familia_generador/register" class=" btn btn-success">Agregar Asociacion</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Descripcion</th>
+                <th>Generador Modelo</th>
+                <th>Consumo</th>
+                <th>Energia(kWh)</th>
+                <th>Familia Nombre</th>
+                <th>Integrantes de la familia</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if lista %}
+                {% for item in lista %}
+                    <tr>
+                        <td>{{ item.descripcion }}</td>
+                        <td>{{ item.generador.modelo }}</td>
+                        <td>{{ item.generador.consumoComustible }}</td>
+                        <td>{{ item.generador.enegeriaGenerada }}</td>
+                        <td>{{ item.persona.nombreFamilia }}</td>
+                        <td>{{ item.persona.nroIntegrantes }}</td>
+                        <td>
+                            <a href="/familia_generador/editar/{{ item.id }}" class="btn btn-info">Modificar</a>
+                            <a href="{{ url_for('familia_generador.eliminar_asociacion', id=item.id) }}" 
+                            class="btn btn-danger btn-sm" 
+                            onclick="return confirm('¿Estas seguro de que deseas eliminar esta asociacion?')">
+                            Eliminar
+                         </a>                        
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">No hay asociaciones disponibles.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="psgetitle">
+    <h1>Registrar Asociacion entre Generador y Familia</h1>
+</div>
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Registrar Asociacion</h5>
+                    <form class="row g-3 needs-validation" method="POST" action="/familia_generador/save" novalidate>
+                        <div class="col-md-6">
+                            <label for="descripcion" class="form-label">Descripcion</label>
+                            <input type="text" class="form-control" name="descripcion" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="familia" class="form-label">Familia</label>
+                            <select class="form-control" required name="familia" id="familiaID">
+                                <option value="">Seleccione una familia</option>
+                                {% for familia in familias %}
+                                    <option value="{{ familia.id }}">{{ familia.nombreFamilia }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="generador" class="form-label">Generador</label>
+                            <select class="form-control" required name="generador" id="generadorID">
+                                <option value="">Seleccione un generador</option>
+                                {% for generador in generadores %}
+                                    <option value="{{ generador.id }}">{{ generador.modelo }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-6">
+                            <button class="btn btn-success" type="submit">Registrar Asociacion</button>
+                        </div>
+                        <div class="col-6">
+                            <a href="{{ url_for('familia_generador.home') }}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript para manejar la lógica -->
+<!-- <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.querySelector("form");
+        form.addEventListener("submit", function(event) {
+            const familiaID = parseFloat(document.getElementById("familiaID").value);
+            const generadorID = parseFloat(document.getElementById("generadorID").value);
+
+            if ((isNaN(saldo) || presupuesto <= 0)) {
+                event.preventDefault(); 
+                alert("No se puede obtener un generador sin un presupuesto válido.");
+            }
+        });
+    });
+</script> -->
+
+{% endblock %}

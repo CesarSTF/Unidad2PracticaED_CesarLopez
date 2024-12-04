@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="psgetitle">
+    <h1>Registrar Familia</h1>
+</div>
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Registro de Familia</h5>
+                    <form class="row g-3 needs-validation" method="POST" action="/familia/save" novalidate>
+                        <div class="col-md-6">
+                            <label for="modelo" class="form-label">Numero de integrantes</label>
+                            <input type="number" class="form-control" name="nroIntegrantes" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="consumo" class="form-label">Nombre de la familia</label>
+                            <input type="text" class="form-control" name="nombreFamilia" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="saldo" class="form-label">Saldo familiar</label>
+                            <input type="number" class="form-control" name="saldo" placeholder="0.0" step="0.01" required>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-success" type="submit">Registrar</button>
+                        </div>
+                        <div class="col-6">
+                            <a href="{{ url_for('familia.home_familia') }}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

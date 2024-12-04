@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="psgetitle">
+    <h1>Editar Generador</h1>
+</div>
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Edicion de Generador</h5>
+                    <form class="row g-3 needs-validation" method="POST" action="/generador/update" novalidate>
+                        <input type="hidden" name="id" value="{{generador.id}}">
+                        <div class="col-md-6">
+                            <label for="modelo" class="form-label">Modelo</label>
+                            <input type="text" class="form-control" name="modelo" required value="{{generador.modelo}}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="consumo" class="form-label">Consumo Combustible</label>
+                            <input type="number" class="form-control" name="consumoComustible" required value="{{ generador.consumoComustible }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="energia" class="form-label">Energia Generada</label>
+                            <input type="number" class="form-control" name="enegeriaGenerada" required value="{{generador.enegeriaGenerada}}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="costo" class="form-label">Costo</label>
+                            <input type="number" class="form-control" name="costo" required value="{{generador.costo}}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="lbltipo" class="form-label">Uso</label>
+                              <select class="form-control" required name="uso">
+                                  {% for generador in lista %}
+                                      <option value="{{ generador }}" {% if generador.uso == generador %}selected{% endif %}>{{ generador }}</option>
+                                  {% endfor %}
+                              </select>
+                          </div>
+                        <div class="col-6">
+                            <button class="btn btn-success" type="submit">Actualizar</button>
+                        </div>
+                        <div class="col-6">
+                            <a href="{{ url_for('generador.home_generador') }}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
