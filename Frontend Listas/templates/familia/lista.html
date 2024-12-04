@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script>
+    $(document).ready(function () {
+        function url_change() {
+            var url = "http://127.0.0.1:5000/familia/search";
+            var search = $("#texto3").val();
+            var criterio = $("#criterio3").val();
+            var new_url = url + "/" + criterio + "/" + search;
+            $("#boton3").attr("href", new_url);
+        }
+
+        $("#texto3").keyup(function () {
+            url_change();
+        });
+        $("#criterio3").change(function () {
+            url_change();
+        });
+    });
+</script>
+
+<div class="pagetitle">
+    <h2>Lista de Familias</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="alert alert-dismissible fade show" role="alert">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <a href="/familia/register" class="btn btn-success">Agregar</a>
+
+    <div class="mt-3 mb-3">
+        <label for="criterio">Criterio:</label>
+        <select name="criterio" id="criterio3" class="form-control">
+            <option value="codigoFamilia">Codigo de la familia</option>
+            <option value="nombrefamilia">Nombre de la familia</option>
+            <option value="nrointegrantes">Numero de integrantes</option>
+            <option value="saldo">Saldo familiar</option>
+        </select>
+
+        <label for="texto">Texto:</label>
+        <input type="text" id="texto3" name="texto" placeholder="Buscar..." value="{{ request.args.get('texto', '') }}"
+            class="form-control">
+
+        <div class="d-flex align-items-center">
+            <a id="boton3" class="btn btn-primary">
+                <i class="fas fa-search-times">Buscar</i>
+            </a>
+        </div>
+    </div>
+
+    <form method="GET" action="{{ url_for('familia.home_familia') }}">
+        <label for="criterio">Criterio:</label>
+        <select name="criterio" id="criterio">
+            <option value="nombreFamilia" {% if criterio=='nombreFamilia' %}selected{% endif %}>Nombre de la Familia
+            </option>
+            <option value="nroIntegrantes" {% if criterio=='nroIntegrantes' %}selected{% endif %}>Numero de Integrantes
+            </option>
+        </select>
+
+        <label for="tipo">Tipo:</label>
+        <select name="tipo" id="tipo">
+            <option value="1" {% if tipo=='1' %}selected{% endif %}>Ascendente</option>
+            <option value="0" {% if tipo=='0' %}selected{% endif %}>Descendente</option>
+        </select>
+
+        <label for="metodo">Metodo:</label>
+        <select name="metodo" id="metodo">
+            <option value="quick" {% if metodo=='quick' %}selected{% endif %}>Quick</option>
+            <option value="merge" {% if metodo=='merge' %}selected{% endif %}>Merge</option>
+            <option value="shell" {% if metodo=='shell' %}selected{% endif %}>Shell</option>
+        </select>
+
+        <button type="submit">Ordenar</button>
+    </form>
+
+    <table class="table table-striped mt-4">
+        <thead>
+            <tr>
+                <th>Codigo familia</th>
+                <th>Numero de integrantes</th>
+                <th>Nombre de la familia</th>
+                <th>Saldo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if lista %}
+            {% for familia in lista %}
+            <tr>
+                <td>{{ familia.codigoFamilia}}</td>
+                <td>{{ familia.nroIntegrantes }}</td>
+                <td>{{ familia.nombreFamilia }}</td>
+                <td>{{ familia.saldo }}</td>
+                <td>
+                    <a href="/familia/editar/{{ familia.id }}" class="btn btn-info">Modificar</a>
+                    <a href="{{ url_for('familia.eliminar_familia', id=familia.id) }}" class="btn btn-danger btn-sm"
+                        onclick="return confirm('¿Estas seguro de que quieres eliminar esta familia?')">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center">No hay familias disponibles.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
