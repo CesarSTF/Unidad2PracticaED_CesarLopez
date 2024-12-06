@@ -92,35 +92,34 @@ public class FamiliaDao extends AdapterDao<Familia>{
     }
 
     /////////////////////////////////////////////////////////
-    public Familia binarySearch(String attribute, Object value) throws Exception {
+    public Familia binarySearch(String attribute, Object valor) throws Exception {
         // lista ordenada por el atributo
         LinkedList<Familia> sortedList = ordenarPor(attribute, 1, "quick");
         //System.out.println("Lista ordenada por " + attribute + ": " + sortedList);
     
-        int low = 0;
+        int bajo = 0;
         int high = sortedList.getSize() - 1;
     
-        while (low <= high) {
-            int mid = (low + high) / 2;
+        while (bajo <= high) {
+            int mid = (bajo + high) / 2;
             Familia midElement = sortedList.get(mid);
     
-            Object midValue = getAttributeValue(midElement, attribute);
+            Object valorMed = getAttributeValue(midElement, attribute);
     
-            //System.out.println("Comparando " + midValue + " con " + value);
+            //System.out.println("Comparando " + valorMed + " con " + valor);
 
             // asegurarse de que el valor es float
             if (attribute.equals("saldo")) {
-                midValue = Float.parseFloat(midValue.toString());
-                value = Float.parseFloat(value.toString());
+                valorMed = Float.parseFloat(valorMed.toString());
+                valor = Float.parseFloat(valor.toString());
             }
     
-
-            int comparison = compareValues(midValue, value);
+            int comparar = compararValores(valorMed, valor);
     
-            if (comparison == 0) {
+            if (comparar == 0) {
                 return midElement; // elemento encontrado
-            } else if (comparison < 0) {
-                low = mid + 1; // mitad superior
+            } else if (comparar < 0) {
+                bajo = mid + 1; // mitad superior
             } else {
                 high = mid - 1; // mitad inferior
             }
@@ -146,7 +145,7 @@ public class FamiliaDao extends AdapterDao<Familia>{
         }
     }
     
-    private int compareValues(Object value1, Object value2) {
+    private int compararValores(Object value1, Object value2) {
         if (value1 instanceof Integer && value2 instanceof Integer) {
             return ((Integer) value1).compareTo((Integer) value2);
         } else if (value1 instanceof Float && value2 instanceof Float) {
@@ -157,27 +156,27 @@ public class FamiliaDao extends AdapterDao<Familia>{
         throw new IllegalArgumentException("Los valores no son comparables");
     }
 
-    public LinkedList<Familia> binarySearchLineal(String attribute, Object value) throws Exception {
+    public LinkedList<Familia> binarySearchLineal(String attribute, Object valor) throws Exception {
         LinkedList<Familia> sortedList = ordenarPor(attribute, 1, "quick");
         
-        int low = 0;
+        int bajo = 0;
         int high = sortedList.getSize() - 1;
         LinkedList<Familia> matches = new LinkedList<>();  // almacenar las coincidencias 
         
-        while (low <= high) {
-            int mid = (low + high) / 2;
+        while (bajo <= high) {
+            int mid = (bajo + high) / 2;
             Familia midElement = sortedList.get(mid);
-            Object midValue = getAttributeValue(midElement, attribute);
+            Object valorMed = getAttributeValue(midElement, attribute);
     
             // asegurarse de que el valor es float
             if (attribute.equals("saldo")) {
-                midValue = Float.parseFloat(midValue.toString());
-                value = Float.parseFloat(value.toString());
+                valorMed = Float.parseFloat(valorMed.toString());
+                valor = Float.parseFloat(valor.toString());
             }
     
-            int comparison = compareValues(midValue, value);
+            int comparar = compararValores(valorMed, valor);
     
-            if (comparison == 0) {
+            if (comparar == 0) {
                 // agregamos a la lista de coincidencias
                 matches.add(midElement);
     
@@ -189,7 +188,7 @@ public class FamiliaDao extends AdapterDao<Familia>{
                 while (left >= 0) {
                     Familia leftElement = sortedList.get(left);
                     Object leftValue = getAttributeValue(leftElement, attribute);
-                    if (compareValues(leftValue, value) == 0) {
+                    if (compararValores(leftValue, valor) == 0) {
                         matches.add(leftElement);
                         left--;
                     } else {
@@ -201,7 +200,7 @@ public class FamiliaDao extends AdapterDao<Familia>{
                 while (right < sortedList.getSize()) {
                     Familia rightElement = sortedList.get(right);
                     Object rightValue = getAttributeValue(rightElement, attribute);
-                    if (compareValues(rightValue, value) == 0) {
+                    if (compararValores(rightValue, valor) == 0) {
                         matches.add(rightElement);
                         right++;
                     } else {
@@ -210,8 +209,8 @@ public class FamiliaDao extends AdapterDao<Familia>{
                 }
     
                 break;  
-            } else if (comparison < 0) {
-                low = mid + 1;  // buscar en mitad superior
+            } else if (comparar < 0) {
+                bajo = mid + 1;  // buscar en mitad superior
             } else {            
                 high = mid - 1;  // buscar en mitad inferior
             }

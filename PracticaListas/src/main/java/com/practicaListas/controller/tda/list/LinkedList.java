@@ -288,6 +288,7 @@ public class LinkedList<E> {
         return this;
     }
 
+    //compara dos objetos por medio de un atributo
     private Boolean atrribute_compare(String attribute, E a, E b, Integer type) throws Exception {
         return compare(exist_attribute(a, attribute), exist_attribute(b, attribute), type);
     }
@@ -322,7 +323,7 @@ public class LinkedList<E> {
             throw new RuntimeException("Error al invocar el metodo para el atributo: " + attribute, e);
         }
 
-        return null; 
+        return null;
 
     }
 
@@ -376,22 +377,22 @@ public class LinkedList<E> {
         return this;
     }
 
-    private void quickSort(E[] lista, Integer low, Integer high, String attribute, Integer type) throws Exception {
-        if (low < high) {
+    private void quickSort(E[] lista, Integer bajo, Integer high, String attribute, Integer type) throws Exception {
+        if (bajo < high) {
 
-            Integer pivot = particion(lista, low, high, attribute, type);
+            Integer pivote = particion(lista, bajo, high, attribute, type);
 
-            quickSort(lista, low, pivot - 1, attribute, type);
-            quickSort(lista, pivot + 1, high, attribute, type);
+            quickSort(lista, bajo, pivote - 1, attribute, type);
+            quickSort(lista, pivote + 1, high, attribute, type);
         }
     }
 
-    private Integer particion(E[] lista, Integer low, Integer high, String attribute, Integer type) throws Exception {
-        E pivot = lista[high];
+    private Integer particion(E[] lista, Integer bajo, Integer high, String attribute, Integer type) throws Exception {
+        E pivote = lista[high];
 
-        int i = low - 1;
-        for (int j = low; j < high; j++) {
-            if (atrribute_compare(attribute, lista[j], pivot, type)) {
+        int i = bajo - 1;
+        for (int j = bajo; j < high; j++) {
+            if (atrribute_compare(attribute, lista[j], pivote, type)) {
                 i++;
                 E aux = lista[i];
                 lista[i] = lista[j];
@@ -425,24 +426,26 @@ public class LinkedList<E> {
         }
     }
 
-    private void merge(E[] lista, Integer l, Integer m, Integer r, String attribute, Integer type) throws Exception {
-        int n1 = m - l + 1;
-        int n2 = r - m;
+    private void merge(E[] lista, Integer l, Integer m, Integer r, 
+                        String attribute, Integer type) throws Exception {
+        int subArr1 = m - l + 1;
+        int subArr2 = r - m;    
 
-        E[] L = (E[]) java.lang.reflect.Array.newInstance(lista.getClass().getComponentType(), n1);
-        E[] R = (E[]) java.lang.reflect.Array.newInstance(lista.getClass().getComponentType(), n2);
+        //no se puede instanciar arreglos genericos directamente
+        E[] L = (E[]) java.lang.reflect.Array.newInstance(lista.getClass().getComponentType(), subArr1);
+        E[] R = (E[]) java.lang.reflect.Array.newInstance(lista.getClass().getComponentType(), subArr2);
 
-        for (int i = 0; i < n1; i++) {
+        for (int i = 0; i < subArr1; i++) {
             L[i] = lista[l + i];
         }
-        for (int j = 0; j < n2; j++) {
+        for (int j = 0; j < subArr2; j++) {
             R[j] = lista[m + 1 + j];
         }
 
         int leftIndex = 0, rightIndex = 0;
         int k = l;
 
-        while (leftIndex < n1 && rightIndex < n2) {
+        while (leftIndex < subArr1 && rightIndex < subArr2) {
             boolean condicion = atrribute_compare(attribute, L[leftIndex], R[rightIndex], type);
             if (condicion) {
                 lista[k] = L[leftIndex];
@@ -454,13 +457,13 @@ public class LinkedList<E> {
             k++;
         }
 
-        while (leftIndex < n1) {
+        while (leftIndex < subArr1) {
             lista[k] = L[leftIndex];
             leftIndex++;
             k++;
         }
 
-        while (rightIndex < n2) {
+        while (rightIndex < subArr2) {
             lista[k] = R[rightIndex];
             rightIndex++;
             k++;
@@ -483,6 +486,8 @@ public class LinkedList<E> {
     }
 
     //////////////////////////////////////////////////////////////////////////////////
+    /// solo fueron creados para metidr el tiempo xd
+    /* 
     public LinkedList<E> shellSort(Integer type) {
         if (!isEmpty()) {
             E[] lista = this.toArray();
@@ -520,6 +525,7 @@ public class LinkedList<E> {
         }
         return this;
     }
+    */
 
     public LinkedList<E> quickSort(Integer type) {
         if (!isEmpty()) {
@@ -531,20 +537,20 @@ public class LinkedList<E> {
         return this;
     }
 
-    private void quickSort(E[] lista, Integer low, Integer high, Integer type) {
-        if (low < high) {
-            Integer pi = particion(lista, low, high, type);
-            quickSort(lista, low, pi - 1, type);
+    private void quickSort(E[] lista, Integer bajo, Integer high, Integer type) {
+        if (bajo < high) {
+            Integer pi = particion(lista, bajo, high, type);
+            quickSort(lista, bajo, pi - 1, type);
             quickSort(lista, pi + 1, high, type);
         }
     }
 
-    private Integer particion(E[] lista, Integer low, Integer high, Integer type) {
-        E pivot = lista[high];
-        int i = (low - 1);
-        for (int j = low; j < high; j++) {
-            Boolean condicion = (type == 1) ? (lista[j].toString().compareTo(pivot.toString()) < 0)
-                    : (lista[j].toString().compareTo(pivot.toString()) > 0);
+    private Integer particion(E[] lista, Integer bajo, Integer high, Integer type) {
+        E pivote = lista[high];
+        int i = (bajo - 1);
+        for (int j = bajo; j < high; j++) {
+            Boolean condicion = (type == 1) ? (lista[j].toString().compareTo(pivote.toString()) < 0)
+                    : (lista[j].toString().compareTo(pivote.toString()) > 0);
             if (condicion) {
                 i++;
                 E aux = lista[i];
@@ -559,7 +565,8 @@ public class LinkedList<E> {
         return i + 1;
     }
 
-    public LinkedList<E> mergeSort(Integer type) {
+    /*
+        public LinkedList<E> mergeSort(Integer type) {
         if (!isEmpty()) {
             E[] lista = this.toArray();
             reset();
@@ -579,21 +586,21 @@ public class LinkedList<E> {
     }
 
     private void merge(E[] lista, Integer l, Integer m, Integer r, Integer type) {
-        int n1 = m - l + 1;
-        int n2 = r - m;
+        int subArr1 = m - l + 1;
+        int subArr2 = r - m;
 
-        E L[] = (E[]) new Object[n1];
-        E R[] = (E[]) new Object[n2];
+        E L[] = (E[]) new Object[subArr1];
+        E R[] = (E[]) new Object[subArr2];
 
-        for (int i = 0; i < n1; ++i)
+        for (int i = 0; i < subArr1; ++i)
             L[i] = lista[l + i];
-        for (int j = 0; j < n2; ++j)
+        for (int j = 0; j < subArr2; ++j)
             R[j] = lista[m + 1 + j];
 
         int i = 0, j = 0;
 
         int k = l;
-        while (i < n1 && j < n2) {
+        while (i < subArr1 && j < subArr2) {
             Boolean condicion = (type == 1) ? (L[i].toString().compareTo(R[j].toString()) <= 0)
                     : (L[i].toString().compareTo(R[j].toString()) >= 0);
 
@@ -607,16 +614,17 @@ public class LinkedList<E> {
             k++;
         }
 
-        while (i < n1) {
+        while (i < subArr1) {
             lista[k] = L[i];
             i++;
             k++;
         }
 
-        while (j < n2) {
+        while (j < subArr2) {
             lista[k] = R[j];
             j++;
             k++;
         }
-    }  
+    }
+        */
 }
