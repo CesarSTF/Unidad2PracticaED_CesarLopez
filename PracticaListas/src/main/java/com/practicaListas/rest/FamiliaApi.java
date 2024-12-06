@@ -196,7 +196,6 @@ public class FamiliaApi {
         FamiliaServices ps = new FamiliaServices();
 
         try {
-            // Llamar al nuevo método 'order' en el servicio
             LinkedList<Familia> lista = ps.order(attribute, type);
 
             map.put("msg", "OK");
@@ -243,8 +242,43 @@ public class FamiliaApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/search/{attribute}/{value}")
-    public Response binarySearch(@PathParam("attribute") String attribute, @PathParam("value") String value) {
+    public Response binarySearchLin(@PathParam("attribute") String attribute, @PathParam("value") String value) {
         HashMap<String, Object> map = new HashMap<>();
+
+        FamiliaServices ps = new FamiliaServices();
+
+        try {
+            LinkedList<Familia> results;
+
+            if (attribute.equalsIgnoreCase("saldo")) {                
+                try {
+                    Float pardeFloat = Float.parseFloat(value);
+                    results = ps.binarySearchLineal(attribute, pardeFloat);
+                } catch (NumberFormatException e) {
+                    map.put("msg", "El valor proporcionado no es un numero valido");
+                    return Response.status(Status.BAD_REQUEST).entity(map).build();
+                }                
+            } else if (attribute.equalsIgnoreCase("nrointegrantes")) {
+                results = ps.binarySearchLineal(attribute, Integer.parseInt(value));
+            } else {
+                results = ps.binarySearchLineal(attribute, value);
+            }
+
+            if (results != null && !results.isEmpty()) {
+                map.put("msg", "OK");
+                map.put("data", results);
+                return Response.ok(map).build();
+            } else {
+                map.put("msg", "No se encontraron generadores con los valores proporcionados");
+                return Response.status(Status.NOT_FOUND).entity(map).build();
+            }
+    
+        } catch (Exception e) {
+            map.put("msg", "Error en la busqueda");
+            map.put("error", e.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(map).build();
+        }
+/*
         FamiliaServices ps = new FamiliaServices();
 
         try {
@@ -289,5 +323,6 @@ public class FamiliaApi {
             map.put("error", e.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(map).build();
         }
+             */
     }
 }

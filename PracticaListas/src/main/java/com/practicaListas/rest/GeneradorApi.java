@@ -204,10 +204,10 @@ public class GeneradorApi {
     @Path("/list/order/{attribute}/{type}")
     public Response getOrder(@PathParam("attribute") String attribute, @PathParam("type") Integer type) {
         HashMap<String, Object> map = new HashMap<>();
+        
         GeneradorServices ps = new GeneradorServices();
 
         try {
-            // Llamar al nuevo método 'order' en el servicio
             LinkedList<Generador> lista = ps.order(attribute, type);
 
             map.put("msg", "OK");
@@ -254,8 +254,47 @@ public class GeneradorApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/search/{attribute}/{value}")
-    public Response binarySearch(@PathParam("attribute") String attribute, @PathParam("value") String value) {
+    public Response binarySearchLin(@PathParam("attribute") String attribute, @PathParam("value") String value) {
         HashMap<String, Object> map = new HashMap<>();
+        GeneradorServices ps = new GeneradorServices(); 
+
+    try {
+        LinkedList<Generador> results;
+
+        if (attribute.equalsIgnoreCase("consumoComustible") || 
+            attribute.equalsIgnoreCase("costo") || 
+            attribute.equalsIgnoreCase("enegeriaGenerada")) {
+
+            try {
+                Float parsedValue = Float.parseFloat(value);
+                results = ps.binarySearchLineal(attribute, parsedValue);
+            } catch (NumberFormatException e) {
+                map.put("msg", "El valor proporcionado no es un numero valido");
+                return Response.status(Status.BAD_REQUEST).entity(map).build();
+            }
+
+        } else if (attribute.equalsIgnoreCase("uso")) {
+            results = ps.binarySearchLineal(attribute, ps.getUso(value)); 
+        } else {
+            results = ps.binarySearchLineal(attribute, value); 
+        }
+
+        if (results != null && !results.isEmpty()) {
+            map.put("msg", "OK");
+            map.put("data", results);
+            return Response.ok(map).build();
+        } else {
+            map.put("msg", "No se encontraron generadores con los valores proporcionados");
+            return Response.status(Status.NOT_FOUND).entity(map).build();
+        }
+
+    } catch (Exception e) {
+        map.put("msg", "Error en la busqueda");
+        map.put("error", e.getMessage());
+        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(map).build();
+    }
+        
+        /*
         GeneradorServices ps = new GeneradorServices();
 
         try {
@@ -296,6 +335,7 @@ public class GeneradorApi {
             map.put("msg", "Error en la busqueda");
             map.put("error", e.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(map).build();
-        }
+        }        
+            */
     }
 }
